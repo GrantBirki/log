@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+
+{{ partial "head.html" . }}
+
+<body>
+    {{ partial "header.html" . }}
+
+    <main class="content-wrapper">
+        <article class="content-container">
+            <section>
+                <h2>{{ .Data.Singular }}: {{ .Name }}</h2>
+                <ul>
+                    {{ range .RegularPages }}
+                    <li>
+                        <a href="{{ .Permalink }}">{{ .Title }}</a>
+                    </li>
+                    {{ end }}
+                </ul>
+            </section>
+
+        {{ partial "footer.html" . }}
+        </article>
+    </main>
+</body>
+
+</html>
