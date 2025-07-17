@@ -1,27 +1,12 @@
-<!doctype html>
-<html lang="en">
-
-{{ partial "head.html" . }}
-
-<body>
-    {{ partial "header.html" . }}
-
-    <main class="content-wrapper">
-        <article class="content-container">
-            <section>
-                <h2>{{ .Title }}</h2>
-                <ul>
-                    {{ range .Data.Terms.Alphabetical }}
-                    <li>
-                        <a href="{{ .Page.Permalink }}">{{ .Page.Name }}</a> ({{ .Count }})
-                    </li>
-                    {{ end }}
-                </ul>
-            </section>
-
-        {{ partial "footer.html" . }}
-        </article>
-    </main>
-</body>
-
-</html>
+{{ define "main" }}
+    <section>
+        <h2>{{ .Title }}</h2>
+        <ul>
+            {{ range .Data.Terms.Alphabetical }}
+            <li>
+                <a href="{{ .Page.Permalink }}">{{ .Page.Name }}</a> ({{ .Count }})
+            </li>
+            {{ end }}
+        </ul>
+    </section>
+{{ end }}

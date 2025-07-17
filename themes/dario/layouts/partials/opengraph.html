@@ -18,9 +18,15 @@
   {{ $isDefault = true }}
 {{ end }}
 
+{{ $title = partial "unescape_smart.html" $title }}
+{{ $description = partial "unescape_smart.html" $description }}
+
 {{ $svg := printf `
     <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
         <style>
+            svg {
+              background-color: #f0efea;
+            }
             @font-face {
               font-family: 'Newsreader';
               src: url('/fonts/Newsreader.woff2') format('woff2');

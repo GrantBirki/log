@@ -2,15 +2,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{ .Title }}</title>
-    
-    {{ if not (strings.HasSuffix .RelPermalink "/404.html") }}
+
+    {{ if strings.HasSuffix .RelPermalink "/404.html" }}
+    <meta name="robots" content="noindex, nofollow" />
+    {{ else }}
     <link rel="canonical" href="{{ .Permalink }}" />
-    {{ end }}
 
     {{- partial "opengraph.html" . -}}
+    {{ end }}
 
     <meta name="author" content="{{ .Site.Params.author }}" />
-    <meta name="description" content="{{ .Site.Params.description }}" />
+    <meta name="description" content="{{ .Description | default .Summary | default .Site.Params.description | plainify | replaceRE "\\s+" " " | truncate 150 }}" />
 
     <link rel="preload" href="{{ "fonts/Newsreader.woff2" | relURL }}" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="{{ "fonts/Newsreader-italic.woff2" | relURL }}" as="font" type="font/woff2" crossorigin />
@@ -20,6 +22,9 @@
     <link rel="icon" type="image/x-icon" href="{{ "favicon.ico" | relURL }}" />
     <link rel="apple-touch-icon" href="{{ "apple-touch-icon.png" | relURL }}" />
 
+    {{ if not .Site.Params.useSystemColorScheme }}
     <script src="{{ "js/darkmode.js" | relURL }}" defer></script>
+    {{ end }}
+
     <script src="{{ "js/footnotes.js" | relURL }}" defer></script>
 </head>
