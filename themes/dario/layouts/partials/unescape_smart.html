@@ -1,0 +1,8 @@
+{{- $text := . -}}
+{{- $text = replace $text "&rsquo;" "’" -}}
+{{- $text = replace $text "&lsquo;" "‘" -}}
+{{- $text = replace $text "&rdquo;" "”" -}}
+{{- $text = replace $text "&ldquo;" "“" -}}
+{{- $text = replace $text "&ndash;" "–" -}}
+{{- $text = replace $text "&mdash;" "—" -}}
+{{- return $text -}}

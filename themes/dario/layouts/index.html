@@ -1,37 +1,22 @@
-<!doctype html>
-<html lang="en">
+{{ define "main" }}
+    {{- with site.Params.homeInfoParams }}
+    <section>
+    <h1 class="smaller">{{ .Title | markdownify }}</h1>
+    <p>{{ .Content | markdownify }}</p>
+    <p>{{ .SubContent | markdownify }}</p>
+    </section>
+    {{- end }}
 
-{{ partial "head.html" . }}
-
-<body>
-    {{ partial "header.html" . }}
-
-    <main class="content-wrapper">
-        <article class="content-container">
-            {{- with site.Params.homeInfoParams }}
-            <section>
-                <h1 class="smaller">{{ .Title | markdownify }}</h1>
-                <p>{{ .Content | markdownify }}</p>
-                <p>{{ .SubContent | markdownify }}</p>
-            </section>
-            {{- end }}
-
-            {{ range sort (where .Site.Sections "Weight" "ne" -1) "Weight" }}
-            <section>
-                <h2>{{ .Title }}</h2>
-                <ul>
-                    {{ range where .Site.RegularPages "Section" .Section }}
-                    <li>
-                        <a href="{{ .Permalink }}">{{ .Title }}</a>
-                    </li>
-                    {{ end }}
-                </ul>
-            </section>
-            {{ end }}
-
-        {{ partial "footer.html" . }}
-        </article>
-    </main>
-</body>
-
-</html>
+    {{ range sort (where .Site.Sections "Weight" "ne" -1) "Weight" }}
+    <section>
+    <h2>{{ .Title }}</h2>
+    <ul>
+        {{ range where .Site.RegularPages "Section" .Section }}
+        <li>
+        <a href="{{ .Permalink }}">{{ .Title }}</a>
+        </li>
+        {{ end }}
+    </ul>
+    </section>
+    {{ end }}
+{{ end }}

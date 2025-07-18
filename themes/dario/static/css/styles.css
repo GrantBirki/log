@@ -36,6 +36,9 @@ header h1 a {
 
 /* Dark Mode Variables */
 .dark-mode-on:root {
+  /* Same as @media (prefers-color-scheme: dark)
+   * Please edit in both places!
+   */
   --bg-color: #141413;
   --text-color: #f0efea;
   --border-color: #444;
@@ -54,6 +57,9 @@ header h1 a {
 }
 
 .dark-mode-off:root {
+  /* Same as @media (prefers-color-scheme: light)
+   * Please edit in both places!
+   */
   --bg-color: #f0efea;
   --text-color: #141413;
   --border-color: #e6e4dd;
@@ -72,8 +78,10 @@ header h1 a {
 }
 
 @media (prefers-color-scheme: dark) {
-  /* Same as .dark-mode-on:root */
   :root {
+    /* Same as .dark-mode-on:root
+     * Please edit in both places!
+     */
     --bg-color: #141413;
     --text-color: #f0efea;
     --border-color: #444;
@@ -93,8 +101,10 @@ header h1 a {
 }
 
 @media (prefers-color-scheme: light) {
-  /* Same as .dark-mode-off:root */
   :root {
+    /* Same as .dark-mode-off:root
+     * Please edit in both places!
+     */
     --bg-color: #f0efea;
     --text-color: #141413;
     --border-color: #e6e4dd;
