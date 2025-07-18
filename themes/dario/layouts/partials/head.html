@@ -1,7 +1,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{ .Title }}</title>
+    <title>{{ .Title | default .Site.Title }}</title>
 
     {{ if strings.HasSuffix .RelPermalink "/404.html" }}
     <meta name="robots" content="noindex, nofollow" />
@@ -12,7 +12,7 @@
     {{ end }}
 
     <meta name="author" content="{{ .Site.Params.author }}" />
-    <meta name="description" content="{{ .Description | default .Summary | default .Site.Params.description | plainify | replaceRE "\\s+" " " | truncate 150 }}" />
+    <meta name="description" content="{{ .Description | default (.Summary | plainify | htmlUnescape | replaceRE "\\s+" " ") | default .Site.Params.description | truncate 150 }}" />
 
     <link rel="preload" href="{{ "fonts/Newsreader.woff2" | relURL }}" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="{{ "fonts/Newsreader-italic.woff2" | relURL }}" as="font" type="font/woff2" crossorigin />

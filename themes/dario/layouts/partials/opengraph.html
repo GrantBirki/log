@@ -1,5 +1,5 @@
-{{ $title := .Params.ogTitle | default .Title }}
-{{ $description := .Params.ogDescription | default .Description | default site.Params.homeInfoParams.Description | default .Summary | truncate 150 }}
+{{ $title := .Params.ogTitle | default .Title | default site.Title }}
+{{ $description := .Params.ogDescription | default .Description | default site.Params.homeInfoParams.Description | default (.Summary | plainify | htmlUnescape | replaceRE "\\s+" " ") | default site.Params.description | truncate 150 }}
 
 <!-- Handle base URL for local dev vs production -->
 {{ $baseURL := .Site.BaseURL | strings.TrimSuffix "/" }}
@@ -17,9 +17,6 @@
   {{ $uniqueName = "default.png" }}
   {{ $isDefault = true }}
 {{ end }}
-
-{{ $title = partial "unescape_smart.html" $title }}
-{{ $description = partial "unescape_smart.html" $description }}
 
 {{ $svg := printf `
     <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
@@ -46,7 +43,7 @@
             </div>
         </foreignObject>
     </svg>
-    ` $title $description | safeHTML }}
+    ` ($title | htmlEscape) $description | safeHTML }}
 
 {{ $generatedSVG := resources.FromString $uniqueName $svg | resources.ExecuteAsTemplate $uniqueName . }}
 
@@ -66,7 +63,7 @@
 <meta property="og:title" content="{{ $title }}" />
 <meta property="og:description" content="{{ $description }}" />
 <meta property="og:image" content="{{ $baseURL }}{{ $ogImageURL }}" />
-<meta property="og:image:type" content='{{ cond (strings.HasSuffix $ogImageURL ".svg") "image/svg+xml" "image/png" }}' />
+<meta property="og:image:type" content={{- if strings.HasSuffix $ogImageURL ".svg" -}}"image/svg+xml"{{- else -}}"image/png"{{- end }} />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta property="og:type" content="website" />
