@@ -71,6 +71,7 @@ jobs:
         run: |
           HUGO_VERSION=$(cat .hugo-version)
           echo "HUGO_VERSION=${HUGO_VERSION}" >> $GITHUB_OUTPUT
+          echo "Using Hugo version ${HUGO_VERSION}"
 
       # install the hugo cli using the version detected in the previous step
       - name: install vendored hugo cli
@@ -89,7 +90,9 @@ jobs:
 
       # this step is custom to my site and adds a 'commit' version to the site
       - name: write build version
-        run: echo ${GITHUB_SHA} > ./public/version.txt
+        env:
+          BUILD_SHA: ${{ needs.trigger.outputs.sha }}
+        run: echo ${BUILD_SHA} > ./public/version.txt
 
       # upload the built site as an artifact for the deploy step
       - name: upload artifact
