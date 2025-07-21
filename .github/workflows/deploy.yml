@@ -59,7 +59,7 @@ jobs:
       - name: install vendored hugo cli
         env:
           HUGO_VERSION: ${{ steps.hugo-version.outputs.HUGO_VERSION }}
-        run: sudo dpkg -i bin/vendor/hugo_extended_${HUGO_VERSION}_linux-amd64.deb
+        run: sudo dpkg -i vendor/hugo_extended_${HUGO_VERSION}_linux-amd64.deb
 
       - name: setup pages
         id: pages

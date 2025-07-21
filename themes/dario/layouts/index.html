@@ -1,0 +1,21 @@
+{{ define "main" }}
+    {{- with .Site.GetPage "_intro.md" }}
+    <section>
+    <h1 class="smaller">{{ .Params.title }}</h1>
+    {{ .Content }}
+    </section>
+    {{- end }}
+
+    {{ range sort (where .Site.Sections "Weight" "ne" -1) "Weight" }}
+    <section>
+    <h2>{{ .Title }}</h2>
+    <ul>
+        {{ range where .Site.RegularPages "Section" .Section }}
+        <li>
+        <a href="{{ .Permalink }}">{{ .Title }}</a>
+        </li>
+        {{ end }}
+    </ul>
+    </section>
+    {{ end }}
+{{ end }}
