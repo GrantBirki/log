@@ -1,7 +1,12 @@
 baseURL = "https://log.birki.io/"
 languageCode = "en-us"
 title = "log"
-theme = "dario"
+
+[module]
+  [[module.imports]]
+    path = "github.com/GrantBirki/dario"
+    noVendor = false
+    version = "main"
 
 [params]
 
