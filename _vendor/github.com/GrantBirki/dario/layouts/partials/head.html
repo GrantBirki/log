@@ -8,7 +8,9 @@
     {{ else }}
     <link rel="canonical" href="{{ .Permalink }}" />
 
-    {{- partial "opengraph.html" . -}}
+        {{- if not .Site.Params.disableSocialMeta }}
+{{ partial "opengraph.html" . }}
+        {{- end }}
     {{ end }}
 
     <meta name="author" content="{{ .Site.Params.author }}" />
