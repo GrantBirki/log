@@ -1,5 +1,4 @@
 +++
-headless = true
 title = "Log - Using Dario Theme" # the text to display on the "/" homepage
 description = "A minimal web log." # The description of the home page that will be used in the open graph meta tags
 +++
