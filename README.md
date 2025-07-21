@@ -22,11 +22,10 @@ Now you can visit [`localhost:1313`](http://localhost:1313/) to see the site.
 
 ## Theme Updates
 
-To pull in the latest updates from the Dario theme, run:
+To pull in the latest updates from the Dario theme, simply run:
 
 ```bash
-hugo mod get -u github.com/GrantBirki/dario@main
-hugo mod tidy
+script/update
 ```
 
 ### Open Graph Images
