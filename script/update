@@ -1,0 +1,7 @@
+#!/bin/bash
+
+hugo mod clean
+hugo mod get -u
+hugo mod tidy
+hugo mod vendor
+hugo mod verify
