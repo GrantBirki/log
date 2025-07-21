@@ -1,0 +1,29 @@
+name = "dario"
+license = "MIT"
+description = "A Hugo theme inspired by Dario Amodei's personal website"
+licenselink = "https://github.com/grantbirki/dario/blob/main/LICENSE"
+homepage = "https://github.com/GrantBirki/dario"
+
+demosite = "https://log.birki.io"
+
+tags = [
+  "simple",
+  "clean",
+  "light",
+  "dark",
+  "blog",
+  "minimalist"
+]
+
+features = [
+  "blog",
+  "opengraph",
+  "theme-toggle"
+]
+
+authors = [
+  {name = "Grant Birkinbine", homepage = "https://github.com/grantbirki"},
+  {name = "Dario Amodei", homepage = "https://darioamodei.com/"}
+]
+
+min_version = "0.119.0"
