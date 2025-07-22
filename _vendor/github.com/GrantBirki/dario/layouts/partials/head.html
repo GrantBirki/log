@@ -1,6 +1,19 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    {{- with site.Params.author }}
+        {{- if reflect.IsMap . }}
+            {{- with .name }}
+    <meta name="author" content="{{ . }}" />
+            {{- end }}
+        {{- else }}
+    <meta name="author" content="{{ . }}" />
+        {{- end }}
+    {{- end }}
+
+    <meta name="description" content="{{ .Description | default (.Summary | plainify | htmlUnescape | replaceRE "\\s+" " ") | default .Site.Params.description | truncate 150 }}" />
+
     <title>{{ .Title | default .Site.Title }}</title>
 
     {{ if strings.HasSuffix .RelPermalink "/404.html" }}
@@ -13,23 +26,31 @@
         {{- end }}
     {{ end }}
 
-    <meta name="author" content="{{ .Site.Params.author }}" />
-    <meta name="description" content="{{ .Description | default (.Summary | plainify | htmlUnescape | replaceRE "\\s+" " ") | default .Site.Params.description | truncate 150 }}" />
-
+    {{- if not .Site.Params.disableFontPreload }}
     <link rel="preload" href="{{ "fonts/Newsreader.woff2" | relURL }}" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="{{ "fonts/Newsreader-italic.woff2" | relURL }}" as="font" type="font/woff2" crossorigin />
+    {{- end }}
 
-    <link rel="stylesheet" href="{{ "css/styles.css" | relURL }}" />
+    {{- $defaultCSS := resources.Get "css/default.css" | minify | fingerprint }}
+    <link rel="stylesheet" href="{{ $defaultCSS.RelPermalink }}" integrity="{{ $defaultCSS.Data.Integrity }}" />
     {{- with resources.Get "css/custom.css" }}
-    <link rel="stylesheet" href="{{ .RelPermalink }}" />
+        {{- with . | minify | fingerprint }}
+    <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" />
+        {{- end }}
     {{- end }}
 
     <link rel="icon" type="image/x-icon" href="{{ "favicon.ico" | relURL }}" />
     <link rel="apple-touch-icon" href="{{ "apple-touch-icon.png" | relURL }}" />
 
-    {{ if not .Site.Params.useSystemColorScheme }}
-    <script src="{{ "js/darkmode.js" | relURL }}" defer></script>
-    {{ end }}
+    {{- if not .Site.Params.useSystemColorScheme }}
+    {{- $darkmodeJS := resources.Get "js/darkmode.js" | minify | fingerprint }}
+    <script src="{{ $darkmodeJS.RelPermalink }}" integrity="{{ $darkmodeJS.Data.Integrity }}" defer></script>
+    {{- end }}
 
-    <script src="{{ "js/footnotes.js" | relURL }}" defer></script>
+    {{- $footnotesJS := resources.Get "js/footnotes.js" | minify | fingerprint }}
+    <script src="{{ $footnotesJS.RelPermalink }}" integrity="{{ $footnotesJS.Data.Integrity }}" defer></script>
+
+    {{- if templates.Exists "partials/nonstdmeta.html" }}
+{{ partial "nonstdmeta.html" . }}
+    {{- end }}
 </head>

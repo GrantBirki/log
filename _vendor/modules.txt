@@ -1,1 +1,1 @@
-# github.com/GrantBirki/dario v0.0.0-20250721160946-427e1f24acf7
+# github.com/GrantBirki/dario v0.0.0-20250722215641-8f25a90daa40
