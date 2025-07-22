@@ -76,3 +76,10 @@
 <meta name="twitter:title" content="{{ $title }}" />
 <meta name="twitter:description" content="{{ $description }}" />
 <meta name="twitter:image" content="{{ $baseURL }}{{ $ogImageURL }}" />
+{{- with site.Params.author }}
+  {{- if reflect.IsMap . }}
+    {{- with .twitter }}
+<meta name="twitter:creator" content="{{ . }}" />
+    {{- end }}
+  {{- end }}
+{{- end }}
