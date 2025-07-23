@@ -1,0 +1,21 @@
+{{ $name := "" }}
+{{ $email := "" }}
+{{ $twitter := "" }}
+
+{{ with site.Params.author }}
+    {{ if reflect.IsMap . }}
+        {{ with .name }}
+            {{ $name = . }}
+        {{ end }}
+        {{ with .email }}
+            {{ $email = . }}
+        {{ end }}
+        {{ with .twitter }}
+            {{ $twitter = . }}
+        {{ end }}
+    {{ else }}
+        {{ $name = . }}
+    {{ end }}
+{{ end }}
+
+{{ return dict "name" $name "email" $email "twitter" $twitter }}
