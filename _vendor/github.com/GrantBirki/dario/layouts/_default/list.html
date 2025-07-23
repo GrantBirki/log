@@ -1,12 +1,10 @@
-{{ define "main" }}
+{{- define "main" }}
     <section>
         <h2>{{ .Title }}</h2>
         <ul>
-            {{ range where .Site.RegularPages "Section" .Section }}
-            <li>
-                <a href="{{ .Permalink }}">{{ .Title }}</a>
-            </li>
-            {{ end }}
+            {{- range where .Site.RegularPages "Section" .Section }}
+            <li><a href="{{ .Permalink }}">{{ .Title }}</a></li>
+            {{- end }}
         </ul>
     </section>
-{{ end }}
+{{- end }}

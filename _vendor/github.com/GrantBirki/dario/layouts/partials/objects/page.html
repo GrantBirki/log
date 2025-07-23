@@ -1,0 +1,27 @@
+{{ $title := .Title | default .Site.Title }}
+
+{{ $_summary := .Summary }}
+
+{{/* Strip HTML */}}
+{{ $_summary = $_summary | plainify }}
+
+{{/* Unescape entities like '&lt;', '&rsquo;', etc.
+   *
+   * Some of these like '<' will be re-escaped in the replaceRE operations,
+   * whereas others like '’' shouldn't be in order to keep the result
+   * SVG-friendly.
+   */}}
+{{ $_summary = $_summary | htmlUnescape }}
+
+{{/* Collapse whitespace */}}
+{{ $_summary = $_summary | replaceRE "\\s+" " " }}
+
+{{/* Trim */}}
+{{ $_summary = $_summary | replaceRE "^ +| +$" "" }}
+
+{{ $description := .Description | default $_summary | default .Site.Params.description }}
+
+{{/* Truncate to a reasonable SEO-friendly length */}}
+{{ $description = $description | truncate 150 }}
+
+{{ return dict "title" $title "description" $description }}
