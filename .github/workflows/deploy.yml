@@ -48,7 +48,7 @@ jobs:
 
     steps:
       - name: checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: set hugo version
         id: hugo-version
@@ -73,7 +73,7 @@ jobs:
         run: echo ${GITHUB_SHA} > ./public/version.txt
 
       - name: upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: ./public
 
