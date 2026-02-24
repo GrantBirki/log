@@ -8,7 +8,6 @@
 
     {{- $page := partial "objects/page.html" . }}
     <meta name="description" content="{{- $page.description -}}">
-
     <title>{{ $page.title }}</title>
 
     {{- if strings.HasSuffix .RelPermalink "/404.html" }}
@@ -37,7 +36,7 @@
     <link rel="icon" type="image/x-icon" href="{{ "favicon.ico" | relURL }}">
     <link rel="apple-touch-icon" href="{{ "apple-touch-icon.png" | relURL }}">
 
-    {{- if not .Site.Params.useSystemColorScheme }}
+    {{- if or (not .Site.Params.colorScheme) (eq .Site.Params.colorScheme "toggle") }}
     {{- $darkmodeJS := resources.Get "js/darkmode.js" | minify | fingerprint }}
     <script src="{{ $darkmodeJS.RelPermalink }}" integrity="{{ $darkmodeJS.Data.Integrity }}" defer></script>
     {{- end }}

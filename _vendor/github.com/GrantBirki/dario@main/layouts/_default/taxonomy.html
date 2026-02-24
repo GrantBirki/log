@@ -1,0 +1,10 @@
+{{- define "main" }}
+    <section>
+        <h2>{{ .Data.Singular }}: {{ .Name | .RenderString }}</h2>
+        <ul>
+            {{- range .RegularPages }}
+            <li><a href="{{ .Permalink }}">{{ .Title | .RenderString | plainify }}</a></li>
+            {{- end }}
+        </ul>
+    </section>
+{{- end }}
