@@ -1,7 +1,11 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+set -euo pipefail
 
 hugo mod clean
+hugo mod get -u github.com/GrantBirki/dario@latest
 hugo mod get -u
 hugo mod tidy
+rm -rf _vendor
 hugo mod vendor
 hugo mod verify

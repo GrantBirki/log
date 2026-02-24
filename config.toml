@@ -6,7 +6,7 @@ title = "log"
   [[module.imports]]
     path = "github.com/GrantBirki/dario"
     noVendor = false
-    version = "main"
+    version = "latest"
 
 [params]
 
@@ -17,4 +17,3 @@ title = "log"
     Title = "Grant Birkinbine"
     Content = "This is a minimal web log inspired by Dario Amodei's personal [website](https://darioamodei.com/). It is designed to be as minimal, performant, and as elegant as possible for reading. It is built with [Hugo](https://gohugo.io/) which is a static site generator written in Go. The theme is open source and available on [GitHub](https://github.com/GrantBirki/dario)."
     Description = "A minimal web log by Grant Birkinbine."
-
