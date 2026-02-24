@@ -35,7 +35,7 @@ jobs:
     steps:
       # https://github.com/github/branch-deploy/blob/d3c24bd92505e623615b75ffdfac5ed5259adbdb/docs/merge-commit-strategy.md
       - name: deployment check
-        uses: github/branch-deploy@v10
+        uses: github/branch-deploy@v11
         id: deployment-check
         with:
           merge_deploy_mode: "true"
@@ -48,7 +48,7 @@ jobs:
 
     steps:
       - name: checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: set hugo version
         id: hugo-version
@@ -73,7 +73,7 @@ jobs:
         run: echo ${GITHUB_SHA} > ./public/version.txt
 
       - name: upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: ./public
 
