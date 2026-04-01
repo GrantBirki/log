@@ -61,7 +61,7 @@ jobs:
     steps:
       # checkout the project's repository based on the sha provided by the branch-deploy step
       - name: checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           ref: ${{ needs.trigger.outputs.sha }}
 
@@ -82,7 +82,7 @@ jobs:
       # configure the GitHub Pages action
       - name: setup pages
         id: pages
-        uses: actions/configure-pages@v5.0.0
+        uses: actions/configure-pages@v6.0.0
 
       # build the site with hugo
       - name: build with hugo
@@ -110,7 +110,7 @@ jobs:
       # deploy the site to GitHub Pages
       - name: deploy
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
 
   # update the deployment result - manually complete the deployment that was created by the branch-deploy action
   result:
