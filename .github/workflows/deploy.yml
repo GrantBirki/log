@@ -35,7 +35,7 @@ jobs:
     steps:
       # https://github.com/github/branch-deploy/blob/d3c24bd92505e623615b75ffdfac5ed5259adbdb/docs/merge-commit-strategy.md
       - name: deployment check
-        uses: github/branch-deploy@v11
+        uses: github/branch-deploy@fded0351b6b79f854b335c11b3d93063461dd288 # pin@v11
         id: deployment-check
         with:
           merge_deploy_mode: "true"
@@ -48,7 +48,7 @@ jobs:
 
     steps:
       - name: checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # pin@v5
 
       - name: set hugo version
         id: hugo-version
@@ -64,7 +64,7 @@ jobs:
 
       - name: setup pages
         id: pages
-        uses: actions/configure-pages@v5.0.0
+        uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # pin@v5.0.0
 
       - name: build with hugo
         run: hugo --gc --logLevel info --baseURL ${{ steps.pages.outputs.base_url }}
@@ -73,7 +73,7 @@ jobs:
         run: echo ${GITHUB_SHA} > ./public/version.txt
 
       - name: upload artifact
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # pin@v4
         with:
           path: ./public
 
@@ -88,4 +88,4 @@ jobs:
     steps:
       - name: deploy
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # pin@v4
