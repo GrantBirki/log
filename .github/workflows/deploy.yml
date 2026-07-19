@@ -35,7 +35,7 @@ jobs:
     steps:
       # https://github.com/github/branch-deploy/blob/d3c24bd92505e623615b75ffdfac5ed5259adbdb/docs/merge-commit-strategy.md
       - name: deployment check
-        uses: github/branch-deploy@fded0351b6b79f854b335c11b3d93063461dd288 # pin@v11
+        uses: github/branch-deploy@ddf8ca48e9cdb2d2c7c71dee428308b19af9313f # pin@v11.1.4
         id: deployment-check
         with:
           merge_deploy_mode: "true"
@@ -57,6 +57,10 @@ jobs:
           echo "HUGO_VERSION=${HUGO_VERSION}" >> $GITHUB_OUTPUT
           echo "Using Hugo version ${HUGO_VERSION}"
 
+      - name: verify vendored hugo cli
+        working-directory: bin/vendor
+        run: sha256sum --check --strict SHA256SUMS
+
       - name: install vendored hugo cli
         env:
           HUGO_VERSION: ${{ steps.hugo-version.outputs.HUGO_VERSION }}
@@ -64,16 +68,21 @@ jobs:
 
       - name: setup pages
         id: pages
-        uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # pin@v5.0.0
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # pin@v6.0.0
 
       - name: build with hugo
+        env:
+          GOTOOLCHAIN: local
+          GOPROXY: "off"
+          HUGO_MODULE_PROXY: "off"
+          HUGO_SECURITY_HTTP_URLS: "none"
         run: hugo --gc --logLevel info --baseURL ${{ steps.pages.outputs.base_url }}
 
       - name: write build version
         run: echo ${GITHUB_SHA} > ./public/version.txt
 
       - name: upload artifact
-        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # pin@v4
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # pin@v5.0.0
         with:
           path: ./public
 
@@ -88,4 +97,4 @@ jobs:
     steps:
       - name: deploy
         id: deployment
-        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # pin@v4
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # pin@v5.0.0

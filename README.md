@@ -22,31 +22,17 @@ Now you can visit [`localhost:1313`](http://localhost:1313/) to see the site.
 
 ## Theme Updates
 
-To pull in the latest updates from the Dario theme, simply run:
+Update Dario to a reviewed commit by passing its full 40-character SHA:
 
 ```bash
-script/update
+script/update <40-character-dario-sha>
 ```
+
+The updater records the resulting immutable pseudo-version in `go.mod`, refreshes the committed `_vendor` snapshot, and verifies that both resolve to the requested commit.
 
 ### Open Graph Images
 
-If you wish to render open graph images, you can use the following commands:
-
-```bash
-npm install
-script/images
-```
-
-Then copy the resulting PNGs that got generated from the front matter of your blog posts into their corresponding `content/posts/<post-name>` directories.
-
-The text on the open graph images comes from the following front matter fields of a blog post:
-
-```yaml
-ogTitle: Grant Birkinbine
-ogDescription: "An example of using the Dario hugo theme"
-```
-
-After you drop the resulting PNGs into your `content/posts/<post-name>` directories, you can point the following front matter field to the PNG file:
+Open Graph images are manually supplied PNG assets committed alongside their posts. Add the image to the post directory, then point the front matter to its public path:
 
 ```yaml
 ogImage: /posts/example/og.png

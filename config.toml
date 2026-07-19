@@ -6,7 +6,6 @@ title = "log"
   [[module.imports]]
     path = "github.com/GrantBirki/dario"
     noVendor = false
-    version = "latest"
 
 [params]
 

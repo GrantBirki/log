@@ -5,14 +5,7 @@ on:
   issue_comment:
     types: [ created ]
 
-# Permissions needed for reacting and adding comments for IssueOps commands
-permissions:
-  pull-requests: write
-  deployments: write
-  contents: write
-  checks: read
-  pages: write
-  id-token: write
+permissions: {}
 
 # set an environment variable for use in the jobs pointing to my site
 env:
@@ -30,6 +23,12 @@ jobs:
       contains(github.event.comment.body, '.wcid') ||
       contains(github.event.comment.body, '.unlock')) }}
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      deployments: write
+      contents: write
+      checks: read
+      statuses: read
     outputs: # set outputs for use in downstream jobs
       continue: ${{ steps.branch-deploy.outputs.continue }}
       noop: ${{ steps.branch-deploy.outputs.noop }}
@@ -43,7 +42,7 @@ jobs:
 
     steps:
       # execute the branch-deploy action
-      - uses: github/branch-deploy@fded0351b6b79f854b335c11b3d93063461dd288 # pin@v11
+      - uses: github/branch-deploy@ddf8ca48e9cdb2d2c7c71dee428308b19af9313f # pin@v11.1.4
         id: branch-deploy
         with:
           trigger: ".deploy"
@@ -51,80 +50,126 @@ jobs:
           production_environments: "github-pages"
           skip_completing: "true" # we will complete the deployment manually in the 'result' job
           admins: "GrantBirki"
+          allow_forks: "false"
 
   # build the github-pages site with hugo
   build:
     needs: trigger
     if: ${{ needs.trigger.outputs.continue == 'true' }} # only run if the trigger job set continue to true
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
-      # checkout the project's repository based on the sha provided by the branch-deploy step
-      - name: checkout
+      - name: checkout trusted tooling
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # pin@v6.0.2
         with:
-          ref: ${{ needs.trigger.outputs.sha }}
+          ref: ${{ github.sha }}
+          path: tooling
+          persist-credentials: false
 
       # read the hugo version from the .hugo-version file in this repository
       - name: set hugo version
         id: hugo-version
         run: |
-          HUGO_VERSION=$(cat .hugo-version)
+          HUGO_VERSION=$(cat tooling/.hugo-version)
+          if [[ ! "${HUGO_VERSION}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Invalid Hugo version: ${HUGO_VERSION}" >&2
+            exit 1
+          fi
           echo "HUGO_VERSION=${HUGO_VERSION}" >> $GITHUB_OUTPUT
           echo "Using Hugo version ${HUGO_VERSION}"
 
-      # install the hugo cli using the version detected in the previous step
+      - name: verify vendored hugo cli
+        working-directory: tooling/bin/vendor
+        run: sha256sum --check --strict SHA256SUMS
+
       - name: install vendored hugo cli
         env:
           HUGO_VERSION: ${{ steps.hugo-version.outputs.HUGO_VERSION }}
-        run: sudo dpkg -i bin/vendor/hugo_extended_${HUGO_VERSION}_linux-amd64.deb
+        run: sudo dpkg -i tooling/bin/vendor/hugo_extended_${HUGO_VERSION}_linux-amd64.deb
 
-      # configure the GitHub Pages action
-      - name: setup pages
-        id: pages
-        uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # pin@v5.0.0
+      - name: verify installed hugo cli
+        env:
+          HUGO_VERSION: ${{ steps.hugo-version.outputs.HUGO_VERSION }}
+        run: |
+          if [[ "$(hugo version)" != "hugo v${HUGO_VERSION}"* ]]; then
+            echo "Installed Hugo version does not match ${HUGO_VERSION}" >&2
+            exit 1
+          fi
+
+      - name: validate selected commit
+        env:
+          SITE_SHA: ${{ needs.trigger.outputs.sha }}
+        run: |
+          if [[ ! "${SITE_SHA}" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "branch-deploy returned an invalid commit SHA" >&2
+            exit 1
+          fi
+
+      - name: checkout selected site
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # pin@v6.0.2
+        with:
+          ref: ${{ needs.trigger.outputs.sha }}
+          path: site
+          persist-credentials: false
 
       # build the site with hugo
       - name: build with hugo
-        run: hugo --gc --logLevel info --baseURL ${{ steps.pages.outputs.base_url }}
+        working-directory: site
+        env:
+          GOTOOLCHAIN: local
+          GOPROXY: "off"
+          HUGO_MODULE_PROXY: "off"
+          HUGO_SECURITY_HTTP_URLS: "none"
+        run: hugo --gc --logLevel info --baseURL "${{ env.web_url }}"
 
       # this step is custom to my site and adds a 'commit' version to the site
       - name: write build version
         env:
           BUILD_SHA: ${{ needs.trigger.outputs.sha }}
-        run: echo ${BUILD_SHA} > ./public/version.txt
+        run: echo "${BUILD_SHA}" > site/public/version.txt
 
       # upload the built site as an artifact for the deploy step
       - name: upload artifact
-        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # pin@v4
+        if: ${{ needs.trigger.outputs.noop != 'true' }}
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # pin@v5.0.0
         with:
-          path: ./public
+          path: site/public
 
   # deploy to GitHub Pages
   deploy:
     needs: [ trigger, build ]
-    if: ${{ needs.trigger.outputs.continue == 'true' }} # only run if the trigger job set continue to true
+    if: ${{ needs.trigger.outputs.continue == 'true' && needs.trigger.outputs.noop != 'true' }}
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
 
     steps:
       # deploy the site to GitHub Pages
       - name: deploy
         id: deployment
-        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # pin@v4
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # pin@v5.0.0
 
   # update the deployment result - manually complete the deployment that was created by the branch-deploy action
   result:
     needs: [ trigger, build, deploy ]
     runs-on: ubuntu-latest
     # run even on failures but only if the trigger job set continue to true
-    if: ${{ always() && needs.trigger.outputs.continue == 'true' }}
+    if: ${{ always() && needs.trigger.outputs.continue == 'true' && needs.trigger.outputs.noop != 'true' }}
+    permissions:
+      contents: write
+      deployments: write
+      issues: write
+      pull-requests: write
 
     steps:
       # if a previous step failed, set a variable to use as the deployment status
       - name: set deployment status
         id: deploy-status
-        if: ${{ needs.trigger.result == 'failure' || needs.build.result == 'failure' ||
-          needs.deploy.result == 'failure' }}
+        if: ${{ needs.trigger.result != 'success' || needs.build.result != 'success' ||
+          needs.deploy.result != 'success' }}
         run: |
           echo "DEPLOY_STATUS=failure" >> $GITHUB_OUTPUT
 
@@ -147,6 +192,7 @@ jobs:
         
       # use the GitHub CLI to remove the non-sticky lock that was created by the branch-deploy action
       - name: remove a non-sticky lock
+        if: ${{ always() }}
         env:
           GH_REPO: ${{ github.repository }}
           GH_TOKEN: ${{ github.token }}
@@ -158,6 +204,7 @@ jobs:
       # remove the default 'eyes' reaction from the comment that triggered the deployment
       # this reaction is added by the branch-deploy action by default
       - name: remove eyes reaction
+        if: ${{ always() }}
         env:
           GH_REPO: ${{ github.repository }}
           GH_TOKEN: ${{ github.token }}
@@ -169,7 +216,7 @@ jobs:
       # if the deployment was successful, add a 'rocket' reaction to the comment that triggered the deployment
       - name: rocket reaction
         if: ${{ steps.deploy-status.outputs.DEPLOY_STATUS != 'failure' }}
-        uses: GrantBirki/comment@608e41b19bc973020ec0e189ebfdae935d7fe0cc # pin@v2.1.1
+        uses: GrantBirki/comment@3439715f0cf3b8fc29bf47be0e3226679c06c41a # pin@v3.0.0
         with:
           comment-id: ${{ needs.trigger.outputs.comment_id }}
           reactions: rocket
@@ -177,7 +224,7 @@ jobs:
       # if the deployment failed, add a '-1' (thumbs down) reaction to the comment that triggered the deployment
       - name: failure reaction
         if: ${{ steps.deploy-status.outputs.DEPLOY_STATUS == 'failure' }}
-        uses: GrantBirki/comment@608e41b19bc973020ec0e189ebfdae935d7fe0cc # pin@v2.1.1
+        uses: GrantBirki/comment@3439715f0cf3b8fc29bf47be0e3226679c06c41a # pin@v3.0.0
         with:
           comment-id: ${{ needs.trigger.outputs.comment_id }}
           reactions: "-1"

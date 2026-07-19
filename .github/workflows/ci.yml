@@ -26,6 +26,10 @@ jobs:
           echo "HUGO_VERSION=${HUGO_VERSION}" >> $GITHUB_OUTPUT
           echo "Using Hugo version ${HUGO_VERSION}"
 
+      - name: verify vendored hugo cli
+        working-directory: bin/vendor
+        run: sha256sum --check --strict SHA256SUMS
+
       # install the hugo cli using the version detected in the previous step
       - name: install vendored hugo cli
         env:
@@ -34,4 +38,9 @@ jobs:
 
       # build the site with hugo
       - name: build with hugo
+        env:
+          GOTOOLCHAIN: local
+          GOPROXY: "off"
+          HUGO_MODULE_PROXY: "off"
+          HUGO_SECURITY_HTTP_URLS: "none"
         run: hugo --gc --logLevel info
