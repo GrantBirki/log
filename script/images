@@ -1,5 +1,0 @@
-#!/bin/bash
-
-hugo --minify
-
-node script/generate-og-images.js

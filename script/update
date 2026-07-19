@@ -2,10 +2,45 @@
 
 set -euo pipefail
 
-hugo mod clean
-hugo mod get -u github.com/GrantBirki/dario@latest
-hugo mod get -u
+repo_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$repo_root"
+
+module_path="github.com/GrantBirki/dario"
+
+if [[ $# -ne 1 || ! "$1" =~ ^[0-9a-f]{40}$ ]]; then
+  echo "usage: script/update <40-character-dario-sha>" >&2
+  exit 1
+fi
+
+for command_name in hugo go; do
+  if ! command -v "$command_name" >/dev/null 2>&1; then
+    echo "error: $command_name is required" >&2
+    exit 1
+  fi
+done
+
+module_sha="$1"
+short_sha="${module_sha:0:12}"
+export GOTOOLCHAIN=local
+
+hugo mod get "$module_path@$module_sha"
 hugo mod tidy
+
+module_version="$(awk -v module="$module_path" '
+  $1 == "require" && $2 == module { print $3 }
+  $1 == module { print $2 }
+' go.mod)"
+
+if [[ "$module_version" != *-"$short_sha" ]]; then
+  echo "error: go.mod resolved $module_path to '$module_version', not '$module_sha'" >&2
+  exit 1
+fi
+
 rm -rf _vendor
 hugo mod vendor
 hugo mod verify
+
+if ! grep -Fqx "# $module_path $module_version" _vendor/modules.txt; then
+  echo "error: _vendor/modules.txt does not match $module_path@$module_version" >&2
+  exit 1
+fi
