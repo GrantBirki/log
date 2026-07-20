@@ -11,6 +11,7 @@ title = "log"
 
   author = "Grant Birkinbine"
   description = "A minimal web log by Grant Birkinbine."
+  showPostsLink = true
 
   [params.copyMarkdown]
     enabled = true
