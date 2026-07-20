@@ -12,6 +12,9 @@ title = "log"
   author = "Grant Birkinbine"
   description = "A minimal web log by Grant Birkinbine."
 
+  [params.copyMarkdown]
+    enabled = true
+
   [params.homeInfoParams]
     Title = "Grant Birkinbine"
     Content = "This is a minimal web log inspired by Dario Amodei's personal [website](https://darioamodei.com/). It is designed to be as minimal, performant, and as elegant as possible for reading. It is built with [Hugo](https://gohugo.io/) which is a static site generator written in Go. The theme is open source and available on [GitHub](https://github.com/GrantBirki/dario)."
