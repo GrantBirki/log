@@ -22,7 +22,7 @@ jobs:
       contains(github.event.comment.body, '.help') ||
       contains(github.event.comment.body, '.wcid') ||
       contains(github.event.comment.body, '.unlock')) }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       pull-requests: write
       deployments: write
@@ -41,6 +41,10 @@ jobs:
       actor_handle: ${{ steps.branch-deploy.outputs.actor_handle }}
 
     steps:
+      - uses: openai/fence@db291f5c51949e6e6ec1634621b36dc4bbf3d54a # pin@v0.8.7
+        with:
+          mode: audit
+
       # execute the branch-deploy action
       - uses: github/branch-deploy@ddf8ca48e9cdb2d2c7c71dee428308b19af9313f # pin@v11.1.4
         id: branch-deploy
@@ -56,11 +60,15 @@ jobs:
   build:
     needs: trigger
     if: ${{ needs.trigger.outputs.continue == 'true' }} # only run if the trigger job set continue to true
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
 
     steps:
+      - uses: openai/fence@db291f5c51949e6e6ec1634621b36dc4bbf3d54a # pin@v0.8.7
+        with:
+          mode: audit
+
       - name: checkout trusted tooling
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # pin@v6.0.2
         with:
@@ -141,12 +149,16 @@ jobs:
   deploy:
     needs: [ trigger, build ]
     if: ${{ needs.trigger.outputs.continue == 'true' && needs.trigger.outputs.noop != 'true' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       pages: write
       id-token: write
 
     steps:
+      - uses: openai/fence@db291f5c51949e6e6ec1634621b36dc4bbf3d54a # pin@v0.8.7
+        with:
+          mode: audit
+
       # deploy the site to GitHub Pages
       - name: deploy
         id: deployment
@@ -155,7 +167,7 @@ jobs:
   # update the deployment result - manually complete the deployment that was created by the branch-deploy action
   result:
     needs: [ trigger, build, deploy ]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     # run even on failures but only if the trigger job set continue to true
     if: ${{ always() && needs.trigger.outputs.continue == 'true' && needs.trigger.outputs.noop != 'true' }}
     permissions:
@@ -165,6 +177,10 @@ jobs:
       pull-requests: write
 
     steps:
+      - uses: openai/fence@db291f5c51949e6e6ec1634621b36dc4bbf3d54a # pin@v0.8.7
+        with:
+          mode: audit
+
       # if a previous step failed, set a variable to use as the deployment status
       - name: set deployment status
         id: deploy-status

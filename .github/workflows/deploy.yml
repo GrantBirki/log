@@ -28,11 +28,15 @@ permissions:
 
 jobs:
   deployment-check:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs: # set outputs for use in downstream jobs
       continue: ${{ steps.deployment-check.outputs.continue }}
 
     steps:
+      - uses: openai/fence@db291f5c51949e6e6ec1634621b36dc4bbf3d54a # pin@v0.8.7
+        with:
+          mode: audit
+
       # https://github.com/github/branch-deploy/blob/d3c24bd92505e623615b75ffdfac5ed5259adbdb/docs/merge-commit-strategy.md
       - name: deployment check
         uses: github/branch-deploy@ddf8ca48e9cdb2d2c7c71dee428308b19af9313f # pin@v11.1.4
@@ -44,9 +48,13 @@ jobs:
   build:
     if: ${{ needs.deployment-check.outputs.continue == 'true' }}
     needs: deployment-check
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
+      - uses: openai/fence@db291f5c51949e6e6ec1634621b36dc4bbf3d54a # pin@v0.8.7
+        with:
+          mode: audit
+
       - name: checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # pin@v6.0.2
 
@@ -92,9 +100,13 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
+      - uses: openai/fence@db291f5c51949e6e6ec1634621b36dc4bbf3d54a # pin@v0.8.7
+        with:
+          mode: audit
+
       - name: deploy
         id: deployment
         uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # pin@v5.0.0
