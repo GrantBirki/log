@@ -22,7 +22,7 @@ jobs:
       contains(github.event.comment.body, '.help') ||
       contains(github.event.comment.body, '.wcid') ||
       contains(github.event.comment.body, '.unlock')) }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     permissions:
       pull-requests: write
       deployments: write
@@ -58,7 +58,7 @@ jobs:
   build:
     needs: trigger
     if: ${{ needs.trigger.outputs.continue == 'true' }} # only run if the trigger job set continue to true
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     permissions:
       contents: read
 
@@ -151,7 +151,7 @@ jobs:
   deploy:
     needs: [ trigger, build ]
     if: ${{ needs.trigger.outputs.continue == 'true' && needs.trigger.outputs.noop != 'true' }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     permissions:
       pages: write
       id-token: write
@@ -167,7 +167,7 @@ jobs:
   # update the deployment result - manually complete the deployment that was created by the branch-deploy action
   result:
     needs: [ trigger, build, deploy ]
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     # run even on failures but only if the trigger job set continue to true
     if: ${{ always() && needs.trigger.outputs.continue == 'true' && needs.trigger.outputs.noop != 'true' }}
     permissions:
