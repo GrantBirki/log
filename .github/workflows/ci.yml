@@ -36,7 +36,11 @@ jobs:
       - name: install vendored hugo cli
         env:
           HUGO_VERSION: ${{ steps.hugo-version.outputs.HUGO_VERSION }}
-        run: sudo dpkg -i bin/vendor/hugo_extended_${HUGO_VERSION}_linux-amd64.deb
+        run: |
+          install_root="$RUNNER_TEMP/hugo-${HUGO_VERSION}"
+          mkdir -p "$install_root"
+          dpkg-deb --extract "bin/vendor/hugo_extended_${HUGO_VERSION}_linux-amd64.deb" "$install_root"
+          echo "$install_root/usr/local/bin" >> "$GITHUB_PATH"
 
       # build the site with hugo
       - name: build with hugo
