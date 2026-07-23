@@ -42,8 +42,6 @@ jobs:
 
     steps:
       - uses: openai/fence@db291f5c51949e6e6ec1634621b36dc4bbf3d54a # pin@v0.8.7
-        with:
-          mode: audit
 
       # execute the branch-deploy action
       - uses: github/branch-deploy@ddf8ca48e9cdb2d2c7c71dee428308b19af9313f # pin@v11.1.4
@@ -66,8 +64,6 @@ jobs:
 
     steps:
       - uses: openai/fence@db291f5c51949e6e6ec1634621b36dc4bbf3d54a # pin@v0.8.7
-        with:
-          mode: audit
 
       - name: checkout trusted tooling
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # pin@v6.0.2
@@ -156,8 +152,6 @@ jobs:
 
     steps:
       - uses: openai/fence@db291f5c51949e6e6ec1634621b36dc4bbf3d54a # pin@v0.8.7
-        with:
-          mode: audit
 
       # deploy the site to GitHub Pages
       - name: deploy
@@ -178,8 +172,6 @@ jobs:
 
     steps:
       - uses: openai/fence@db291f5c51949e6e6ec1634621b36dc4bbf3d54a # pin@v0.8.7
-        with:
-          mode: audit
 
       # if a previous step failed, set a variable to use as the deployment status
       - name: set deployment status
