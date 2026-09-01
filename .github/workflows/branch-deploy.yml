@@ -68,7 +68,7 @@ jobs:
           mode: audit
 
       - name: checkout trusted tooling
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # pin@v6.0.2
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # pin@v7.0.1
         with:
           ref: ${{ github.sha }}
           path: tooling
@@ -118,7 +118,7 @@ jobs:
           fi
 
       - name: checkout selected site
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # pin@v6.0.2
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # pin@v7.0.1
         with:
           ref: ${{ needs.trigger.outputs.sha }}
           path: site
@@ -230,7 +230,7 @@ jobs:
       # if the deployment was successful, add a 'rocket' reaction to the comment that triggered the deployment
       - name: rocket reaction
         if: ${{ steps.deploy-status.outputs.DEPLOY_STATUS != 'failure' }}
-        uses: GrantBirki/comment@3439715f0cf3b8fc29bf47be0e3226679c06c41a # pin@v3.0.0
+        uses: GrantBirki/comment@937820f3623fd0e300294bcc64ac7577fc0ad4cc # pin@v3.0.3
         with:
           comment-id: ${{ needs.trigger.outputs.comment_id }}
           reactions: rocket
@@ -238,7 +238,7 @@ jobs:
       # if the deployment failed, add a '-1' (thumbs down) reaction to the comment that triggered the deployment
       - name: failure reaction
         if: ${{ steps.deploy-status.outputs.DEPLOY_STATUS == 'failure' }}
-        uses: GrantBirki/comment@3439715f0cf3b8fc29bf47be0e3226679c06c41a # pin@v3.0.0
+        uses: GrantBirki/comment@937820f3623fd0e300294bcc64ac7577fc0ad4cc # pin@v3.0.3
         with:
           comment-id: ${{ needs.trigger.outputs.comment_id }}
           reactions: "-1"
