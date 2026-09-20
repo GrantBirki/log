@@ -15,7 +15,7 @@ jobs:
   # branch-deploy trigger job
   trigger:
     if: # only run on pull request comments and very specific comment body string as defined in our branch-deploy settings
-      ${{ github.event.issue.pull_request &&
+      ${{ github.event.issue.pull_request && contains(fromJSON('["OWNER", "MEMBER"]'), github.event.comment.author_association) &&
       (contains(github.event.comment.body, '.deploy') ||
       contains(github.event.comment.body, '.lock') ||
       contains(github.event.comment.body, '.noop') ||
