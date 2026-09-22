@@ -17,7 +17,7 @@ jobs:
       - uses: openai/fence@c22db5d5c19f83d1d7b40e9def37a7a6099bbca2 # pin@v0.8.10
 
       - name: unlock on merge
-        uses: github/branch-deploy@f0984057ffe1aa340aa017b6eafb894310aed88e # pin@v12.0.0
+        uses: grantbirki/branch-deploy@a7a7ea40a15a79a036322c2924ab74f5eded702c # pin@v12.1.0
         id: unlock-on-merge
         with:
           unlock_on_merge_mode: "true" # <-- indicates that this is the "Unlock on Merge Mode" workflow
