@@ -9,6 +9,8 @@ permissions:
   pull-requests: write
   contents: read
 
+cache-mode: none
+
 jobs:
   comment:
     if: github.event_name == 'pull_request' && github.event.action == 'opened'

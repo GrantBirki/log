@@ -26,6 +26,8 @@ permissions:
   pages: write
   id-token: write
 
+cache-mode: none
+
 jobs:
   deployment-check:
     runs-on: ubuntu-latest
