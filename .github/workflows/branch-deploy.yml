@@ -46,7 +46,7 @@ jobs:
       - uses: openai/fence@e6b39c80c51cb2b2a39448ddeff74b3b886c0a63 # pin@v0.10.0
 
       # execute the branch-deploy action
-      - uses: grantbirki/branch-deploy@a7a7ea40a15a79a036322c2924ab74f5eded702c # pin@v12.1.0
+      - uses: grantbirki/branch-deploy@7173dcbb72a30da0148076fade87260ddd1b5e28 # pin@v12.4.2
         id: branch-deploy
         with:
           trigger: ".deploy"
