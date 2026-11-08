@@ -43,7 +43,9 @@ jobs:
       actor_handle: ${{ steps.branch-deploy.outputs.actor_handle }}
 
     steps:
-      - uses: openai/fence@e6b39c80c51cb2b2a39448ddeff74b3b886c0a63 # pin@v0.10.0
+      - name: fence
+        if: runner.environment == 'github-hosted' && runner.os == 'Linux' && runner.arch == 'X64'
+        uses: openai/fence@9d10445098284f8e8bbf67495fc8c2eaa34c28c5 # pin@v0.12.7
 
       # execute the branch-deploy action
       - uses: grantbirki/branch-deploy@7173dcbb72a30da0148076fade87260ddd1b5e28 # pin@v12.4.2
@@ -65,7 +67,9 @@ jobs:
       contents: read
 
     steps:
-      - uses: openai/fence@e6b39c80c51cb2b2a39448ddeff74b3b886c0a63 # pin@v0.10.0
+      - name: fence
+        if: runner.environment == 'github-hosted' && runner.os == 'Linux' && runner.arch == 'X64'
+        uses: openai/fence@9d10445098284f8e8bbf67495fc8c2eaa34c28c5 # pin@v0.12.7
         with:
           mode: audit
 
@@ -159,7 +163,9 @@ jobs:
       id-token: write
 
     steps:
-      - uses: openai/fence@e6b39c80c51cb2b2a39448ddeff74b3b886c0a63 # pin@v0.10.0
+      - name: fence
+        if: runner.environment == 'github-hosted' && runner.os == 'Linux' && runner.arch == 'X64'
+        uses: openai/fence@9d10445098284f8e8bbf67495fc8c2eaa34c28c5 # pin@v0.12.7
 
       # deploy the site to GitHub Pages
       - name: deploy
@@ -179,7 +185,9 @@ jobs:
       pull-requests: write
 
     steps:
-      - uses: openai/fence@e6b39c80c51cb2b2a39448ddeff74b3b886c0a63 # pin@v0.10.0
+      - name: fence
+        if: runner.environment == 'github-hosted' && runner.os == 'Linux' && runner.arch == 'X64'
+        uses: openai/fence@9d10445098284f8e8bbf67495fc8c2eaa34c28c5 # pin@v0.12.7
 
       # if a previous step failed, set a variable to use as the deployment status
       - name: set deployment status

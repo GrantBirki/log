@@ -13,15 +13,17 @@ cache-mode: none
 
 jobs:
   comment:
-    if: github.event_name == 'pull_request' && github.event.action == 'opened'
     runs-on: ubuntu-latest
 
     steps:
-      - uses: openai/fence@e6b39c80c51cb2b2a39448ddeff74b3b886c0a63 # pin@v0.10.0
+      - name: fence
+        if: runner.environment == 'github-hosted' && runner.os == 'Linux' && runner.arch == 'X64'
+        uses: openai/fence@9d10445098284f8e8bbf67495fc8c2eaa34c28c5 # pin@v0.12.7
 
       # Comment on new PR requests with deployment instructions
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # pin@v7.0.1
       - name: comment
+        if: github.event_name == 'pull_request' && github.event.action == 'opened'
         uses: GrantBirki/comment@937820f3623fd0e300294bcc64ac7577fc0ad4cc # pin@v3.0.3
         continue-on-error: true
         with:
