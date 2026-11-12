@@ -45,7 +45,7 @@ jobs:
     steps:
       - name: fence
         if: runner.environment == 'github-hosted' && runner.os == 'Linux' && runner.arch == 'X64'
-        uses: openai/fence@9d10445098284f8e8bbf67495fc8c2eaa34c28c5 # pin@v0.12.7
+        uses: openai/fence@c7675fea986c29f1d655753a7a61fd6b4141be8f # pin@v0.13.0
 
       # execute the branch-deploy action
       - uses: grantbirki/branch-deploy@7173dcbb72a30da0148076fade87260ddd1b5e28 # pin@v12.4.2
@@ -69,7 +69,7 @@ jobs:
     steps:
       - name: fence
         if: runner.environment == 'github-hosted' && runner.os == 'Linux' && runner.arch == 'X64'
-        uses: openai/fence@9d10445098284f8e8bbf67495fc8c2eaa34c28c5 # pin@v0.12.7
+        uses: openai/fence@c7675fea986c29f1d655753a7a61fd6b4141be8f # pin@v0.13.0
         with:
           mode: audit
 
@@ -165,12 +165,12 @@ jobs:
     steps:
       - name: fence
         if: runner.environment == 'github-hosted' && runner.os == 'Linux' && runner.arch == 'X64'
-        uses: openai/fence@9d10445098284f8e8bbf67495fc8c2eaa34c28c5 # pin@v0.12.7
+        uses: openai/fence@c7675fea986c29f1d655753a7a61fd6b4141be8f # pin@v0.13.0
 
       # deploy the site to GitHub Pages
       - name: deploy
         id: deployment
-        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # pin@v5.0.0
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # pin@v5.0.1
 
   # update the deployment result - manually complete the deployment that was created by the branch-deploy action
   result:
@@ -187,7 +187,7 @@ jobs:
     steps:
       - name: fence
         if: runner.environment == 'github-hosted' && runner.os == 'Linux' && runner.arch == 'X64'
-        uses: openai/fence@9d10445098284f8e8bbf67495fc8c2eaa34c28c5 # pin@v0.12.7
+        uses: openai/fence@c7675fea986c29f1d655753a7a61fd6b4141be8f # pin@v0.13.0
 
       # if a previous step failed, set a variable to use as the deployment status
       - name: set deployment status
