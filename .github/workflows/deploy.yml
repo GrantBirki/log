@@ -37,7 +37,7 @@ jobs:
     steps:
       - name: fence
         if: runner.environment == 'github-hosted' && runner.os == 'Linux' && runner.arch == 'X64'
-        uses: openai/fence@c7675fea986c29f1d655753a7a61fd6b4141be8f # pin@v0.13.0
+        uses: openai/fence@7cba9082252803421a0e433f29198de6d0063221 # pin@v0.13.1
 
       # https://github.com/github/branch-deploy/blob/d3c24bd92505e623615b75ffdfac5ed5259adbdb/docs/merge-commit-strategy.md
       - name: deployment check
@@ -55,7 +55,7 @@ jobs:
     steps:
       - name: fence
         if: runner.environment == 'github-hosted' && runner.os == 'Linux' && runner.arch == 'X64'
-        uses: openai/fence@c7675fea986c29f1d655753a7a61fd6b4141be8f # pin@v0.13.0
+        uses: openai/fence@7cba9082252803421a0e433f29198de6d0063221 # pin@v0.13.1
         with:
           mode: audit
 
@@ -113,7 +113,7 @@ jobs:
     steps:
       - name: fence
         if: runner.environment == 'github-hosted' && runner.os == 'Linux' && runner.arch == 'X64'
-        uses: openai/fence@c7675fea986c29f1d655753a7a61fd6b4141be8f # pin@v0.13.0
+        uses: openai/fence@7cba9082252803421a0e433f29198de6d0063221 # pin@v0.13.1
 
       - name: deploy
         id: deployment
