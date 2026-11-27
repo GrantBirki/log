@@ -18,7 +18,7 @@ jobs:
     steps:
       - name: fence
         if: runner.environment == 'github-hosted' && runner.os == 'Linux' && runner.arch == 'X64'
-        uses: openai/fence@c7675fea986c29f1d655753a7a61fd6b4141be8f # pin@v0.13.0
+        uses: openai/fence@7703f3be10ee3d0a84e1839233e19fa00bb254a8 # pin@v0.13.2
 
       - name: unlock on merge
         uses: grantbirki/branch-deploy@a589e8d69ed275ec1e1dbfa8de6e3429f077b08b # pin@v12.4.3
